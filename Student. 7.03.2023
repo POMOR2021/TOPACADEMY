@@ -1,0 +1,185 @@
+#include <iostream>
+#include <stdlib.h>
+#include <fstream>
+#include <time.h>
+#include <string>
+#include <iomanip>
+#include <Windows.h>
+#include <conio.h>
+#include <string.h>
+
+using namespace std;
+class UROK
+{
+	uint32_t time;
+	char* predmet;
+	char* prepodovatel;
+	uint32_t yroven;
+public:
+	UROK(uint32_t newTime, const char* newPredmet, const char* newPrepodovatel, uint32_t newYroven) :
+		time{ newTime }, predmet{ newPredmet ? new char[strlen(newPredmet) + 1] : nullptr },
+		prepodovatel{ newPrepodovatel ? new char[strlen(newPrepodovatel) + 1] : nullptr }, yroven{ newYroven }
+	{
+		if (predmet)
+		{
+			strcpy_s(predmet, strlen(newPredmet) + 1, newPredmet);
+		}
+		if (prepodovatel)
+		{
+			strcpy_s(prepodovatel, strlen(newPrepodovatel) + 1, newPrepodovatel);
+		}
+	}
+	UROK() : UROK(0, "Алгебра", "Геометрия", 0) {}
+	UROK(const UROK& u) : time{ u.time }, predmet{ u.predmet ? new char[strlen(u.predmet) + 1] : nullptr }, prepodovatel{ u.prepodovatel ? new char[strlen(u.prepodovatel) + 1] : nullptr }, yroven{ u.yroven }
+	{
+		if (predmet)
+		{
+			strcpy_s(predmet, strlen(u.predmet), u.predmet);
+		}
+		if (prepodovatel)
+		{
+			strcpy_s(prepodovatel, strlen(u.prepodovatel), u.prepodovatel);
+		}
+	}
+	uint32_t gettime() { return time; }
+	void settime(uint32_t nTime) { time = nTime; }
+
+	char* getpredmet() const { return predmet; }
+	void setpredmet(const char* nPredmet) {
+		if (predmet)
+		{
+			predmet = new char[strlen(nPredmet) + 1];
+			strcpy_s(predmet, strlen(nPredmet) + 1, nPredmet);
+		}
+	}
+	char* getprepodovatel() const { return prepodovatel; }
+	void setprepodovatel(const char* nPrepodovatel) {
+		if (prepodovatel)
+			prepodovatel = new char[strlen(nPrepodovatel) + 1];
+		strcpy_s(prepodovatel, strlen(nPrepodovatel) + 1, nPrepodovatel);
+	}
+
+	uint32_t getyroven() { return yroven; }
+	void setYroven(uint32_t nYroven) { yroven = nYroven; }
+
+	void print()
+	{
+		cout << "Время урока:" << time << '\n'
+			<< "Предмет:" << predmet << '\n'
+			<< "Преподователь:" << prepodovatel << '\n'
+			<< "Уровень:" << yroven << endl;
+	}
+	~UROK()
+	{
+		delete[] predmet;
+		delete[] prepodovatel;
+	}
+
+
+};
+
+class Student
+{
+	int* ocenki;
+	char* Name;
+	char* Fam;
+	uint32_t day;
+	uint32_t month;
+	uint32_t year;
+	UROK yroki;
+public:
+	Student(int* nOcenki, const  char* nName, const char* nFam, uint32_t nDay, uint32_t nMonth, uint32_t nYear) :
+		ocenki{ nOcenki }, Name{nName ? new char[strlen(nName) + 1] : nullptr},
+		Fam{ nFam ? new char[strlen(nFam) + 1] : nullptr }, day{ nDay }, month{ nMonth }, year{ nYear }
+	{
+		if (Name)
+		{
+			strcpy_s(Name, strlen(nName) + 1, nName);
+		}
+		if (Fam)
+		{
+			strcpy_s(Fam, strlen(nFam) + 1, nFam);
+		}
+	}
+	Student() : Student(0, "Peter 1", "Grinev", 16, 02, 2000) {}
+	Student(const Student& st) : ocenki{ st.ocenki }, Name{ st.Name ? new char[strlen(st.Name) + 1] : nullptr },
+		Fam{ st.Fam ? new char[strlen(st.Fam) + 1] : nullptr }, day{ st.day }, month{ st.month }, year{ st.year }
+	{
+		if (Name)
+		{
+			strcpy_s(Name, strlen(st.Name) + 1, st.Name);
+		}
+		if (Fam)
+		{
+			strcpy_s(Name, strlen(st.Name) + 1, st.Name);
+		}
+	}
+	int* getocenki() const { return ocenki; }
+	void setocenki(int* nOcenki) { ocenki = nOcenki; }
+	char* getName() const { return Name; }
+	void setName(const char* nName) {
+		Name = new char[strlen(nName) + 1];
+		strcpy_s(Name, strlen(nName) + 1, nName);
+	}
+	char* getFam() const { return Fam; }
+	void setFam(const char* nFam) {
+		Fam = new char[strlen(nFam) + 1];
+		strcpy_s(Fam, strlen(nFam), nFam);
+	}
+	uint32_t getday() const { return day; }
+	void setday(uint32_t nDay) { day = nDay; }
+	uint32_t getMonth() const { return month; }
+	void setMonth(uint32_t nMonth) { month = nMonth; }
+	uint32_t getyear() const { return year; }
+	void setYear(uint32_t nYear) { year = nYear; }
+	void printAll()
+	{
+		cout << "MARKS:" << ocenki << '\n'
+			<< "Name:" << Name << '\n'
+			<< "Surname:" << Fam << '\n'
+			<< "Date birthday:" << '\n' <<  day << '\n' << month << '\n' << year << endl;
+	}
+	void printMarks()
+	{
+		cout << "Marks:" << '\t' << ocenki << endl;
+	}
+	void printFI()
+	{
+		cout << "Name and Surname:" << '\t' << Name << Fam << endl;
+	}
+	void printDR()
+	{
+		cout << "Date Birthday:" << '\n' << day << '\n' << month << '\n' << year << endl;
+	}
+	~Student()
+	{
+		delete[] Name;
+		delete[] Fam;
+	}
+
+};
+class Schkola
+{
+
+};
+int main()
+{
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+	setlocale(0, "Russia");
+	srand(time(NULL));
+	/*UROK urok;*/
+	/*urok.print();
+	urok.settime(12);
+	urok.setpredmet("Алгебра");
+	urok.setprepodovatel("Григорий Лепс");
+	urok.setYroven(8);
+	cout << urok.gettime();
+	cout << endl;
+	cout << urok.getpredmet();
+	cout << endl;
+	cout << urok.getprepodovatel();
+	cout << endl;
+	cout << urok.getyroven();
+	cout << endl;*/
+}
