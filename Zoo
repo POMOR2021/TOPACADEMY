@@ -17,5 +17,5 @@ private:
     char* okras;
 public:
     Zoo(const char* newNazavanie_porodi,uint32_t sredves,const char* okras) : 
-     nazvanie_porodi{nazvanie_porodi ? strlen()}
+     nazvanie_porodi{newNazvanie_porodi ? new char[strlen(newNazvanie_porodi)] : nullptr}
 };
