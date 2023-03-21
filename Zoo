@@ -1,0 +1,21 @@
+#include<iostream>
+#include<fstream>
+#include<iomanip>
+#include<Windows.h>
+#include<stdlib.h>
+#include<time.h>
+#include<conio.h>
+#include<string>
+
+using namespace std;
+
+class Zoo
+{
+private:
+    char* nazvanie_porodi;
+    uint32_t sredves;
+    char* okras;
+public:
+    Zoo(const char* newNazavanie_porodi,uint32_t sredves,const char* okras) : 
+     nazvanie_porodi{nazvanie_porodi ? strlen()}
+};
