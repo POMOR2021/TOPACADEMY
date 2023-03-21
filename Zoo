@@ -12,77 +12,111 @@ using namespace std;
 class Zoo
 {
 private:
-    char* nazvanie_porodi;
-    uint32_t sredves;
-    char* okras;
+	char* nazvanie_porodi;
+	uint32_t sredves;
+	char* okras;
 public:
-    Zoo(const char* newNazvanie_porodi, uint32_t newSredves, const char* newOkras) :
-        nazvanie_porodi{ newNazvanie_porodi ? new char[strlen(newNazvanie_porodi) + 1] : nullptr }, 
-        sredves{newSredves}, 
-        okras{newOkras ? new char[strlen(newOkras) + 1] : nullptr}
-    {
-        if (nazvanie_porodi)
-        {
-           
-                strcpy_s(nazvanie_porodi, strlen(newNazvanie_porodi), newNazvanie_porodi);
-        }
-        if (okras)
-        {
-            strcpy_s(okras, strlen(newOkras), newOkras);
-        }
-    }
-    Zoo() : Zoo("Чихуа-хуа",0,"Черный") {}
+	Zoo(const char* newNazvanie_porodi, uint32_t newSredves, const char* newOkras) :
+		nazvanie_porodi{ newNazvanie_porodi ? new char[strlen(newNazvanie_porodi) + 1] : nullptr },
+		sredves{ newSredves },
+		okras{ newOkras ? new char[strlen(newOkras) + 1] : nullptr }
+	{
+		if (nazvanie_porodi)
+		{
+
+			strcpy_s(nazvanie_porodi, strlen(newNazvanie_porodi), newNazvanie_porodi);
+		}
+		if (okras)
+		{
+			strcpy_s(okras, strlen(newOkras), newOkras);
+		}
+	}
+	Zoo() : Zoo("Чихуа-хуа", 0, "Черный") {}
 	Zoo(const Zoo& ob) :
-		nazvanie_porodi{ new char[strlen(nazvanie_porodi) + 1] : nullptr}, size{ ob.size }
+		nazvanie_porodi{ob.nazvanie_porodi}, sredves{ob.sredves}, okras{ ob.okras }
 	{
 
 
-		for (int i{ 0 }; i < size; i++)
+		for (int i{ 0 }; i < sredves; i++)
 		{
-			arr[i] = ob.arr[i];
+			nazvanie_porodi[i] = ob.nazvanie_porodi[i];
 		}
-		cout << "DynArr конструктор с параметром массив объекта " << size << "Находится в" << this << '\n';
+		cout << "DynArr конструктор с параметром массив объекта " << sredves << "Находится в" << this << '\n';
 	}
-	/*DynArr& operator=(const DynArr& object)
+	Zoo& operator=(const Zoo& object)
 	{
 		if (!(this == &object))
 		{
-			if (size != object.size)
+			if (sredves != object.sredves)
 			{
-				delete[] arr;
-				arr = new int[object.size];
+				delete[] nazvanie_porodi;
+				nazvanie_porodi = new char[object.sredves];
 			}
-			size = object.size;
+			sredves = object.sredves;
 
-			for (int i{ 0 }; i < size; i++)
+			for (int i{ 0 }; i < sredves; i++)
 			{
-				arr[i] = object.arr[i];
+				nazvanie_porodi[i] = object.nazvanie_porodi[i];
 			}
-			cout << "DynArr copy assigned for" << size << "elements, for" << this << '\n';
+			cout << "DynArr copy assigned for" << sredves << "elements, for" << this << '\n';
 		}
 		return *this;
-	}*/
-	DynArr(DynArr&& object) :
-		arr{ object.arr }, size{ object.size }
-	{
-		object.arr = nullptr;
-		object.size = 0;
-		cout << "DynArr move constructed for" << size << "element, for" << this << '\n';
-	}
-	DynArr& operator=(const DynArr& object)
-	{
 		if (!(this == &object))
 		{
-			if (size != object.size)
+			if (sredves != object.sredves)
 			{
-				delete[] arr;
-				arr = new int[object.size];
+				delete[] okras;
+				okras = new char[object.sredves];
 			}
-			size = object.size;
-			int* dest{ arr };
-			int* src{ object.arr };
+			sredves = object.sredves;
 
-			int* const end{ arr + size };
+			for (int i{ 0 }; i < sredves; i++)
+			{
+				okras[i] = object.okras[i];
+			}
+			cout << "DynArr copy assigned for" << sredves << "elements, for" << this << '\n';
+		}
+		return *this;
+	}
+	Zoo(Zoo&& ob) :
+		nazvanie_porodi{ ob.nazvanie_porodi }, sredves{ ob.sredves }, okras{ ob.okras }
+	{
+		ob.nazvanie_porodi = nullptr;
+		ob.sredves = 0;
+		ob.okras = nullptr;
+	}
+	Zoo& operator=(const Zoo& ob)
+	{
+		if (!(this == &ob))
+		{
+			if (sredves != ob.sredves)
+			{
+				delete[] nazvanie_porodi;
+				nazvanie_porodi = new char[ob.sredves];
+			}
+			sredves = ob.sredves;
+			char* dest{ nazvanie_porodi };
+			char* src{ ob.nazvanie_porodi };
+
+			char* const end{ nazvanie_porodi + sredves };
+			while (dest < end)
+			{
+				*dest++ = *src++;
+			}
+		}
+		return *this;
+		if (!(this == &ob))
+		{
+			if (sredves != ob.sredves)
+			{
+				delete[] okras;
+				okras = new char[ob.sredves];
+			}
+			sredves = ob.sredves;
+			char* dest{ okras };
+			char* src{ ob.okras };
+
+			char* const end{ okras + sredves };
 			while (dest < end)
 			{
 				*dest++ = *src++;
@@ -90,32 +124,44 @@ public:
 		}
 		return *this;
 	}
-	DynArr& operator=(DynArr&& object)
+	Zoo& operator=(Zoo&& object)
 	{
 		if (!(this == &object))
 		{
 
-			delete arr;
-			arr = object.arr;
-			size = object.size;
-			object.arr = nullptr;
-			object.size = 0;
+			delete nazvanie_porodi;
+			nazvanie_porodi = object.nazvanie_porodi;
+			sredves = object.sredves;
+			object.nazvanie_porodi = nullptr;
+			object.sredves = 0;
 		}
-		cout << "DynArray move assigned for" << size << "elements, for" << this << '\n';
+		cout << "DynArray move assigned for" << sredves << "elements, for" << this << '\n';
 		return *this;
 	}
-    Zoo(const Zoo& u) : nazvanie_porodi{ nazvanie_porodi ? new char[strlen(u.nazvanie_porodi) + 1] : nullptr }, sredves{ u.sredves}, okras{ u.okras ? new char[strlen(u.okras) + 1] : nullptr }
-    {
-        if (nazvanie_porodi)
-        {
+	Zoo(const Zoo& u) : nazvanie_porodi{ nazvanie_porodi ? new char[strlen(u.nazvanie_porodi) + 1] : nullptr }, sredves{ u.sredves }, okras{ u.okras ? new char[strlen(u.okras) + 1] : nullptr }
+	{
+		if (nazvanie_porodi)
+		{
 
-            strcpy_s(nazvanie_porodi, strlen(u.nazvanie_porodi), u.nazvanie_porodi);
-        }
-        if (okras)
-        {
-            strcpy_s(okras, strlen(u.okras), u.okras);
-        }
-    }
-
+			strcpy_s(nazvanie_porodi, strlen(u.nazvanie_porodi), u.nazvanie_porodi);
+		}
+		if (okras)
+		{
+			strcpy_s(okras, strlen(u.okras), u.okras);
+		}
+	}
+	~Zoo()
+	{
+		delete[] nazvanie_porodi;
+		delete[] okras;
+	}
 };
 
+
+
+int main()
+{
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+	srand(time(NULL));
+}
