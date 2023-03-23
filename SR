@@ -1,0 +1,106 @@
+#include <iostream>
+#include <stdlib.h>
+#include <fstream>
+#include <Windows.h>
+#include <time.h>
+#include <string>
+#include <iomanip>
+#include <conio.h>
+#include <cassert>
+using namespace std;
+class Point
+{
+	char* name;
+	int x;
+	int y;
+public:
+	Point(char* nName, int nX, int nY) :
+		name{ nName ? new char[strlen(nName) + 1] : nullptr }, x{ nX }, y{ nY }
+	{
+		if (name)
+		{
+			strcpy_s(name, strlen(nName), nName);
+		}
+	}
+	template<typename T4>
+	Point(T4 nName, T4 nX, T4 nY) = delete;
+	Point() : Point(nullptr, 0, 0) {}
+	Point(Point&& ob) :
+		name{ ob.name  }, x{ ob.x }, y{ ob.y }
+	{
+		ob.name = nullptr;
+		ob.x = 0;
+		ob.y = 0;
+
+	}
+	Point(const Point& ob) :
+		name{ ob.name ? new char[strlen(ob.name) + 1] : nullptr }, x{ ob.x }, y{ ob.y }
+	{
+		if (name)
+		{
+			strcpy_s(name, strlen(ob.name), ob.name);
+		}
+	}
+
+	char* getName() const { return name; }
+	void setName(char* nName) { name = nName; }
+	template<typename T1>
+	void setName(T1 nName) = delete;
+
+	int getX() { return x; }
+	void setX(int nX) { x = nX; }
+	template<typename T2>
+	void setX(T2 nX) = delete;
+
+	int getY() { return y; }
+	void setY(int nY) { y = nY; }
+	template<typename T3>
+	void setY(T3 nY) = delete;
+	 
+	void Print()
+	{
+		cout << "Имя" << name << '\n' << "x" << x << '\n' << y << '\n';
+	}
+	Point& operator=(const Point& object)
+	{
+		if (!(this == &object))
+		{
+			if (name != object.name)
+			{
+				delete[] name;
+				name = object.name;
+			}
+			x = object.x;
+			y = object.y;
+		}
+		return *this;
+	}
+	Point& operator=(Point&& object)
+	{
+		if (!(this == &object))
+		{
+
+			delete name;
+			name = object.name;
+			x = object.x;
+			y = object.y;
+			object.name = nullptr;
+			object.x = 0;
+			object.y = 0;
+		}
+		return*this;
+	}
+};
+
+
+
+int main()
+{
+	Point p1("erorr", 0, 0);
+
+	p1.setX(15);
+	p1.setX(15.5);
+	p1.setY(10.5);
+	p1.setY(1);
+	p1.setName();
+}
