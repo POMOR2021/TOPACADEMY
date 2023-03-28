@@ -9,28 +9,6 @@
 
 using namespace std;
 
-class Zoo
-{
-private:
-	char* nazvanie_porodi;
-	uint32_t sredves;
-	char* okras;
-public:
-	Zoo(const char* newNazvanie_porodi, uint32_t newSredves, const char* newOkras) :
-		nazvanie_porodi{ newNazvanie_porodi ? new char[strlen(newNazvanie_porodi) + 1] : nullptr },
-		sredves{ newSredves },
-		okras{ newOkras ? new char[strlen(newOkras) + 1] : nullptr }
-	{
-#include<iostream>
-#include<fstream>
-#include<iomanip>
-#include<Windows.h>
-#include<stdlib.h>
-#include<time.h>
-#include<conio.h>
-#include<string>
-
-using namespace std;
 
 class Zoo
 {
@@ -77,19 +55,26 @@ public:
 	}
 	Zoo& operator=(Zoo& object)
 	{
-		delete nazvanie_porodi;
-		nazvanie_porodi = object.nazvanie_porodi;
+		if (nazvanie_porodi)
+		{
+
+			strcpy_s(nazvanie_porodi, strlen(object.nazvanie_porodi), object.nazvanie_porodi);
+		}
+		if (okras)
+		{
+			strcpy_s(okras, strlen(object.okras), object.okras);
+		}
 		sredves = object.sredves;
-		object.nazvanie_porodi = nullptr;
-		object.sredves = 0;
 		return *this;
 	}
 	Zoo& operator=(Zoo&& object)
 	{
 		delete nazvanie_porodi;
 		nazvanie_porodi = object.nazvanie_porodi;
+		okras = object.okras;
 		sredves = object.sredves;
 		object.nazvanie_porodi = nullptr;
+		object.okras = nullptr;
 		object.sredves = 0;
 		return *this;
 	}
@@ -108,5 +93,5 @@ int main()
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
 	srand(time(NULL));
-
+	
 }
