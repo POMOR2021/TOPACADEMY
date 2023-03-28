@@ -21,6 +21,29 @@ public:
 		sredves{ newSredves },
 		okras{ newOkras ? new char[strlen(newOkras) + 1] : nullptr }
 	{
+#include<iostream>
+#include<fstream>
+#include<iomanip>
+#include<Windows.h>
+#include<stdlib.h>
+#include<time.h>
+#include<conio.h>
+#include<string>
+
+using namespace std;
+
+class Zoo
+{
+private:
+	char* nazvanie_porodi;
+	uint32_t sredves;
+	char* okras;
+public:
+	Zoo(const char* newNazvanie_porodi, uint32_t newSredves, const char* newOkras) :
+		nazvanie_porodi{ newNazvanie_porodi ? new char[strlen(newNazvanie_porodi) + 1] : nullptr },
+		sredves{ newSredves },
+		okras{ newOkras ? new char[strlen(newOkras) + 1] : nullptr }
+	{
 		if (nazvanie_porodi)
 		{
 
@@ -32,7 +55,7 @@ public:
 		}
 	}
 	Zoo() : Zoo("Чихуа-хуа", 0, "Черный") {}
-	Zoo(const Zoo& u) : 
+	Zoo(const Zoo& u) :
 		nazvanie_porodi{ nazvanie_porodi ? new char[strlen(u.nazvanie_porodi) + 1] : nullptr }, sredves{ u.sredves }, okras{ u.okras ? new char[strlen(u.okras) + 1] : nullptr }
 	{
 		if (nazvanie_porodi)
@@ -45,7 +68,7 @@ public:
 			strcpy_s(okras, strlen(u.okras), u.okras);
 		}
 	}
-	Zoo(Zoo&& ob) :
+	Zoo(Zoo& ob) :
 		nazvanie_porodi{ ob.nazvanie_porodi }, sredves{ ob.sredves }, okras{ ob.okras }
 	{
 		ob.nazvanie_porodi = nullptr;
@@ -63,14 +86,14 @@ public:
 	}
 	Zoo& operator=(Zoo&& object)
 	{
-			delete nazvanie_porodi;
-			nazvanie_porodi = object.nazvanie_porodi;
-			sredves = object.sredves;
-			object.nazvanie_porodi = nullptr;
-			object.sredves = 0;
+		delete nazvanie_porodi;
+		nazvanie_porodi = object.nazvanie_porodi;
+		sredves = object.sredves;
+		object.nazvanie_porodi = nullptr;
+		object.sredves = 0;
 		return *this;
 	}
-	
+
 	~Zoo()
 	{
 		delete[] nazvanie_porodi;
