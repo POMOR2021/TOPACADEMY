@@ -1,0 +1,130 @@
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include <iomanip>
+#include <Windows.h>
+#include <fstream>
+#include <string>
+#include <conio.h>
+#include <cassert>
+
+using namespace std;
+class MedalRow
+{
+	char country[4];
+	int medals[5];
+public:
+	static const int GOLD{ 0 };
+	static const int SILVER{ 1 };
+	static const int BRONZE{ 2 };
+	MedalRow(const char* countryP, const int* medalsP)
+	{
+		strcpy_s(country, 4, countryP ? countryP : "NON");
+		for (int i = 0; i < 3; i++)
+		{
+			medals[i] = medalsP ? medalsP[i] : 0;
+		}
+	}
+	MedalRow() : MedalRow(nullptr, nullptr) {}
+	MedalRow& setcontry(const char* countryP)
+	{
+		if (countryP)
+		{
+			strcpy_s(country, 4, countryP);
+		}
+		return*this;
+	}
+	const char* getcountry() const {return country;}
+	int& operator[](int idx)
+	{
+		assert((idx >= 0 and idx < 3) and "Index out" "of range!");
+		return medals[idx];
+	}
+	int operator[](int idx)const
+	{
+		assert((idx >= 0 and idx < 3) and "Index out" "of range!");
+		return medals[idx];
+	}
+	void print() const
+	{
+		cout << '[' << country << "] - (";
+		for (int i = 0; i < 3; i++)
+		{
+			cout << medals[i];
+			if (i < 2) { cout << '\t';}
+		}
+		cout << ")\n";
+	}
+};
+class MedalTable
+{
+public:
+	static const int maxSize{ 10 };
+private:
+	MedalRow MedalRows[MedalTable::maxSize];
+	int size;
+	int findCountru(const char* country)const
+	{
+		for (int i = 0; i < size; i++)
+		{
+			if (strcmp(MedalRows[i].getcountry(), country) == 0)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+public:
+	MedalTable() : size{ 0 }{}
+	MedalRow& operator[](const char* country)
+	{
+		int idx{ findCountru(country) };
+		if (idx == -1)
+		{
+			assert(size < MedalTable::maxSize and "Table is FULL");
+			idx = size++;
+			MedalRows[idx].setcontry(country);
+
+		}
+		return MedalRows[idx];
+	}
+	const MedalRow& operator[](const char* country) const
+	{
+		int idx{ findCountru(country) };
+		
+		assert(size != -1 and " Country not foundf on const"
+		"table");
+		return MedalRows[idx];
+	}
+	void print() const
+	{
+		for (int i = 0; i < size; i++)
+		{
+			MedalRows[i].print();
+		}
+	}
+};
+int main()
+{
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+	srand(time(NULL));
+	MedalTable mt1;
+	cout << "MedalsTebale#1:\n";
+	mt1["RUS"][MedalRow::GOLD] = 14;
+	mt1["RUS"][MedalRow::SILVER] = 5;
+	mt1["RUS"][MedalRow::BRONZE] = 9;
+	mt1["JAP"][MedalRow::GOLD] = 7;
+	mt1["JAP"][MedalRow::SILVER] = 53;
+	mt1["JAP"][MedalRow::BRONZE] = 91;
+	mt1["ENG"][MedalRow::GOLD] = 4;
+	mt1["ENG"][MedalRow::SILVER] = 2;
+	mt1["ENG"][MedalRow::BRONZE] = 1;
+	mt1["POL"][MedalRow::SILVER] = 2;
+	mt1.print();
+	cout << "\nmedalsTable#2\n";
+	const MedalTable mt2{ mt1 };
+	mt2.print() ;
+	//mt2["QWE"].print();
+	return 0;
+}
