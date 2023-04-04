@@ -1,53 +1,45 @@
 #include <iostream>
-#include <stdlib.h>
-#include <time.h>
-#include <iomanip>
 #include <Windows.h>
+#include <time.h>
+#include <stdlib.h>
 #include <fstream>
 #include <string>
 #include <conio.h>
-
+#include <iomanip>
+#include <cassert>
 
 using namespace std;
 
 class String
 {
 	char* string;
-	int size;
 public:
-	String(char* nString, int nSize) :
-		string{nString}, size{nSize}{}
-	String() : String(nullptr, 80){}
-	String(int size) 
+	String(char* nString) :
+		string{ nString ? new char[strlen(nString) + 1] : nullptr } {}
+	String() : String(nullptr)
 	{
-		string = new char[size + 1];
-		strcpy(string, string);
-	}
-	String(const char* string_)
-	{
-		string = new char[strlen(string) + 1];
-		strcpy(string, string_);
+		string = new char[80];
 	}
 	~String()
 	{
 		delete[] string;
 	}
+	void ViewString()
+	{
+		cout << "Введите первую строку";
+		cin >> string;
+	}
 };
+
+
+
 int main()
 {
-	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	srand(time(NULL));
-	String string1();
-	String string2();
-
-	cout << "Введите первую строку";
-	cin >> string1;
-
-	cout << "Введите вторую строку";
-	cin >> string2;
-
-	cout << string1 << " + " << string2;
-	string1 + string2;
-	cout << " = " << string1 << endl;
+	
+	String string1;
+	string1.ViewString();
+	
 }
