@@ -1,0 +1,227 @@
+#include <iostream>
+#include <Windows.h>
+#include <time.h>
+#include <stdlib.h>
+#include <fstream>
+#include <string>
+#include <conio.h>
+#include <iomanip>
+#include <cassert>
+
+using namespace std;
+
+class MedalRow
+{
+	char country[4];
+	int medals[3];
+
+public:
+
+	static const int GOLD{ 0 };
+	static const int SILVER{ 1 };
+	static const int BRONZE{ 2 };
+
+	MedalRow(const char* countryP, const int* medalsP)
+	{
+		strcpy_s(country, 4, countryP ? countryP : "NON");
+		for (int i{ 0 }; i < 3; i++)
+		{
+			medals[i] = medalsP ? medals[i] : 0;
+		}
+	}
+
+	MedalRow() : MedalRow(nullptr, nullptr) {}
+
+	MedalRow(const MedalRow& cop)
+	{
+		if (country)
+		{
+			strcpy_s(country, strlen(cop.country) + 1, cop.country);
+		}
+		for (int i{ 0 }; i < 4; ++i)
+			country[i] = cop.country[i];
+		for (int i{ 0 }; i < 3; ++i)
+			medals[i] = cop.medals[i];
+	}
+
+	MedalRow(MedalRow&& object)
+	{
+		for (int i{ 0 }; i < 4; ++i)
+			country[i] = object.country[i];
+		for (int i{ 0 }; i < 3; ++i)
+			medals[i] = object.medals[i];
+		delete[] object.country;
+		delete[] object.medals;
+	}
+
+	MedalRow& setCountry(const char* countryP)
+	{
+		if (countryP)
+		{
+			strcpy_s(country, 4, countryP);
+		}
+		return *this;
+	}
+
+	const char* getCountry() const { return country; }
+
+	int& operator[](int idx)
+	{
+		assert((idx >= 0 and idx < 3) and "Index out"
+			"of range!");
+		return medals[idx];
+	}
+
+	int operator[](int idx) const
+	{
+		assert((idx >= 0 and idx < 3) and "Index out"
+			"of range!");
+		return medals[idx];
+	}
+
+	MedalRow& operator=(const MedalRow& object)
+	{
+		if (!(this == &object))
+		{
+			if (country != object.country)
+			{
+				for (int i{ 0 }; i < 4; ++i)
+					country[i] = object.country[i];
+			}
+			if (medals != object.medals)
+			{
+				for (int i{ 0 }; i < 3; ++i)
+					medals[i] = object.medals[i];
+			}
+		}
+		return *this;
+	}
+
+	void print() const
+	{
+		cout << "["  << country << "] - ( ";
+		for (int i{ 0 }; i < 3; ++i)
+		{
+			cout << medals[i];
+			if (i < 2) { cout << '\t'; }
+		}
+		cout << ")\n";
+	}
+};
+
+class MedalsTable
+{
+public:
+
+	static const int maxSize{ 10 };
+
+private:
+
+	MedalRow medalRows[MedalsTable::maxSize];
+	int size;
+	int findCountry(const char* country)const
+	{
+		for (int i{ 0 }; i < size; ++i)
+		{
+			if (strcmp(medalRows[i].getCountry(), country) == 0)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+public:
+
+	MedalsTable() : size{ 0 } {};
+
+	MedalsTable(MedalsTable&& object)
+		: size{ object.size }
+	{
+		for (int i{ 0 }; i < size; ++i)
+			medalRows[i] = object.medalRows[i];
+		delete[] object.medalRows;
+		object.size = 0;
+	}
+
+	MedalsTable(const MedalsTable& cop)
+		: size{ cop.size }
+	{
+		for (int i{ 0 }; i < size; ++i)
+			medalRows[i] = cop.medalRows[i];
+	}
+
+	MedalRow& operator[](const char* country)
+	{
+		int idx{ findCountry(country) };
+		if (idx == -1)
+		{
+			assert(size < MedalsTable::maxSize and
+				"Table is FULL!");
+			idx = size++;
+			medalRows[idx].setCountry(country);
+		}
+		return medalRows[idx];
+	}
+
+	MedalsTable& operator=(const MedalsTable& object)
+	{
+		if (!(this == &object))
+		{
+			if (medalRows != object.medalRows)
+			{
+				delete[] medalRows;
+				for (int i{ 0 }; i < size; ++i)
+					medalRows[i] = object.medalRows[i];
+			}
+			if (size != object.size)
+			{
+				size = 0;
+				size = object.size;
+			}
+		}
+		return *this;
+	}
+
+	const MedalRow& operator[](const char* country) const
+	{
+		int idx{ findCountry(country) };
+		assert(idx = -1 and "Country not found on const "
+			"table");
+		return medalRows[idx];
+	}
+
+	void print() const
+	{
+		for (int i{ 0 }; i < size; ++i)
+		{
+			medalRows[i].print();
+		}
+	}
+
+};
+
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	srand(time(NULL));
+
+	MedalsTable mt1;
+	cout << "Medals table #1:\n";
+	mt1["RUS"][MedalRow::GOLD] = 14;
+	mt1["RUS"][MedalRow::BRONZE] = 5;
+	mt1["RUS"][MedalRow::SILVER] = 9;
+	mt1["JAP"][MedalRow::GOLD] = 7;
+	mt1["JAP"][MedalRow::SILVER] = 53;
+	mt1["JAP"][MedalRow::BRONZE] = 91;
+	mt1["ENG"][MedalRow::GOLD] = 4;
+	mt1["ENG"][MedalRow::SILVER] = 2;
+	mt1["ENG"][MedalRow::BRONZE] = 1;
+	mt1["POL"][MedalRow::SILVER] = 2;
+	mt1.print();
+	cout << "\n Medals table #2:\n";
+	const MedalsTable mt2{ mt1 };
+	mt2.print();
+	mt2["QWE"].print();
+}
