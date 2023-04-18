@@ -1,0 +1,41 @@
+#include <iostream>
+#include <Windows.h>
+#include <time.h>
+#include <stdlib.h>
+#include <fstream>
+#include <string>
+#include <conio.h>
+#include <iomanip>
+#include <cassert>
+
+using namespace std;
+
+class String
+{
+	char* str;
+public:
+	String(int x) : str{ new char[x + 1] } {}
+
+	String() : String(80) {}
+
+	void add(const char* nStr) { str ? strcpy_s(str, strlen(str), nStr) : 0; }
+
+	~String() { str = nullptr; }
+
+	void print() const
+	{
+		cout << str;
+	}
+};
+
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	srand(time(NULL));
+
+	String s(4);
+	s.add("text");
+	s.print();
+
+}
